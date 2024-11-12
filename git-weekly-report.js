@@ -11,6 +11,19 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+// 获取当前用户的 Git 配置
+async function getGitUserName() {
+  const git = simpleGit();
+  try {
+    const config = await git.raw(['config', 'user.name']);
+    return config.trim(); // 去除多余的空格和换行
+  } catch (error) {
+    console.error(chalk.red('获取 Git 用户名失败，请确保已配置 user.name：'), error);
+    process.exit(1);
+  }
+}
+
+
 // 获取最近一周的时间范围
 function getLastWeekRange() {
   const now = new Date();
@@ -27,12 +40,14 @@ function getLastWeekRange() {
 // 获取时间范围内的 git log
 async function getGitLogs(projectPath, since, until) {
   const git = simpleGit(projectPath); // 为每个项目创建一个 git 实例
+  const author = await getGitUserName(); // 获取当前用户的用户名
   try {
     console.log(chalk.blue(`正在获取 ${projectPath} 项目从 ${since} 到 ${until} 的提交记录...\n`));
 
     const log = await git.log({
       '--since': since,
       '--until': until,
+      '--author': author, // 只获取当前用户的提交记录
       format: {
         hash: '%h',
         date: '%ar',
