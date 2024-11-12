@@ -1,12 +1,21 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-require('dotenv').config();
-const simpleGit = require('simple-git');
+import { GoogleGenerativeAI } from '@google/generative-ai'
+import dotenv from 'dotenv'
+import simpleGit from 'simple-git'
+
 const git = simpleGit();
+import readline from 'readline'; // 改为 import
 
+import chalk from 'chalk'; // 改为 import
+dotenv.config()
 
+// 创建 readline 接口
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 async function generateCommitMessage(diffContent) {
   const apiKey = process.env.API_KEY;
-  const prompt = `根据以下 git diff 内容生成一条简洁的 commit 信息：\n\n${diffContent}\n\nCommit message:`;
+  const prompt = `根据以下 git diff 内容生成一条简洁的只有中文的 commit 信息：\n\n${diffContent}\n\n`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -17,7 +26,8 @@ async function generateCommitMessage(diffContent) {
 
 
     const result = await model.generateContent(prompt);
-    console.log(result.response.text());
+
+    return result.response.text()
   } catch (error) {
     console.error('Error generating commit message:', error);
     return null;
@@ -38,24 +48,32 @@ async function getGitDiff() {
 
 // 主程序
 async function main() {
+  console.log(chalk.blue.bold('--- Git Commit Helper ---'));
+  console.log(chalk.green('正在获取暂存区的修改内容...\n'));
+
   const diffContent = await getGitDiff();
-
-  console.log(diffContent, "diffContentdiffContent")
   if (diffContent) {
-    console.log('Git diff 内容：\n', diffContent);
+    console.log(chalk.yellow('Git diff 内容：\n'), chalk.white(diffContent));
 
+    console.log(chalk.green('\n正在使用 OpenAI 生成提交信息...\n'));
     const commitMessage = await generateCommitMessage(diffContent);
     if (commitMessage) {
-      console.log('生成的 commit 信息：\n', commitMessage);
+      console.log(chalk.cyan.bold('生成的提交信息：\n'), chalk.green(commitMessage));
 
-      const confirm = prompt('是否使用此提交信息？(y/n): ');
-      if (confirm === 'y') {
-        await git.commit(commitMessage);
-        console.log('提交成功');
-      } else {
-        console.log('提交已取消');
-      }
+      // 使用 readline 提示用户
+      rl.question(chalk.magenta('是否使用此提交信息？(y/n): '), async (answer) => {
+        if (answer.toLowerCase() === 'y') {
+          await git.commit(commitMessage);
+          console.log(chalk.green.bold('\n提交成功！🎉'));
+        } else {
+          console.log(chalk.red('\n提交已取消。'));
+        }
+        rl.close(); // 关闭 readline 接口
+      });
     }
+  } else {
+    console.error(chalk.red('没有获取到任何修改内容。'));
+    rl.close(); // 关闭 readline 接口，即使出错也不遗留资源
   }
 }
 
