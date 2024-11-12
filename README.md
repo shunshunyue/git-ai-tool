@@ -109,11 +109,11 @@ def5678 - Bob: 更新了文档 (5 days ago)
 
 工具使用 Google Generative AI API 来生成提交信息和周报，因此需要设置 API 密钥。
 
-1.  创建 `.env` 文件，在其中添加以下内容：
+1.  在 `config` 文件，在其中添加以下内容：
     
     ```
     API_KEY=your-google-api-key
-    API_MODEL=使用的模型
+    API_MODEL=使用的谷歌gemini模型
     ```
     
 2.  将你的 Google API 密钥填入 `API_KEY` 变量。
@@ -122,7 +122,7 @@ def5678 - Bob: 更新了文档 (5 days ago)
 
 +   `git-commit-helper.js`: 用于自动生成提交信息。
 +   `git-weekly-report.js`: 用于生成多个项目的周报。
-+   `.env`: 存储 API 密钥。
++   `config.js`: 存储 API 密钥。
 +   `package.json`: 包含项目的元数据和依赖项。
 
 ## 常见问题
@@ -141,7 +141,7 @@ def5678 - Bob: 更新了文档 (5 days ago)
 ### 3\. 周报生成失败？
 
 +   确保项目路径正确，并且该路径下有 Git 仓库。
-+   确保 `.env` 文件中正确配置了 Google API 密钥。
++   确保 `config` 文件中正确配置了 Google API 密钥。
 
 ## 贡献
 
