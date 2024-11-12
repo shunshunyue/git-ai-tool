@@ -33,7 +33,7 @@ async function stageChanges() {
 
 async function generateCommitMessage(diffContent) {
   const apiKey = process.env.API_KEY;
-  const prompt = `根据以下 git diff 内容生成一条简洁的只有中文的 commit 信息：\n\n${diffContent}\n\n`;
+  const prompt = `根据以下 git diff 内容生成一条只有中文的简洁的 commit 信息：\n\n${diffContent}\n\n`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
