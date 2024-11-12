@@ -2,6 +2,8 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import dotenv from 'dotenv'
 import simpleGit from 'simple-git'
+import { config } from './config.js'
+
 
 const git = simpleGit();
 import readline from 'readline'; // 改为 import
@@ -33,8 +35,8 @@ async function stageChanges() {
 
 
 async function generateCommitMessage(diffContent) {
-  const apiKey = process.env.API_KEY;
-  const apiModel = process.env.API_MODEL;
+  const apiKey = config.API_KEY;
+  const apiModel = config.API_MODEL;
   const prompt = `根据以下 git diff 内容生成一条只有中文的简洁的 commit 信息：\n\n${diffContent}\n\n`;
 
   try {

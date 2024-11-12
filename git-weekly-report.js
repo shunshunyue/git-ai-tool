@@ -4,6 +4,8 @@ import readline from 'readline';
 import chalk from 'chalk';
 import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { config } from './config.js'
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -56,12 +58,13 @@ async function getGitLogs(projectPath, since, until) {
 
 // 使用 Google Generative AI 生成周报
 async function generateReport(commitLogs) {
-  const apiKey = process.env.API_KEY;
+  const apiKey = config.API_KEY;
+  const apiModel = config.API_MODEL;
   const prompt = `根据以下提交记录生成一份详细的只有中文的周报，适合团队分享：\n\n${commitLogs}`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: apiModel });
     const result = await model.generateContent(prompt);
     return result.response.text();
   } catch (error) {
