@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import dotenv from 'dotenv'
 import simpleGit from 'simple-git'

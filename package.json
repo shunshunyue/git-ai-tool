@@ -7,6 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",
+  "bin": {
+    "git-commit": "./git-commit-helper.js",
+    "git-report": "./git-weekly-report.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
