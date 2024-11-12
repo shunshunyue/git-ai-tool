@@ -33,11 +33,12 @@ async function stageChanges() {
 
 async function generateCommitMessage(diffContent) {
   const apiKey = process.env.API_KEY;
+  const apiModel = process.env.API_MODEL;
   const prompt = `根据以下 git diff 内容生成一条只有中文的简洁的 commit 信息：\n\n${diffContent}\n\n`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: apiModel });
     const result = await model.generateContent(prompt);
     return result.response.text()
   } catch (error) {
