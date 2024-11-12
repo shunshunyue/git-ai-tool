@@ -1,6 +1,6 @@
-  Git Tool README
+  Git  AI Tool README
 
-# Git Tool
+# Git AI Tool
 
 `git-tool` 是一个方便的 Git 提交记录工具，支持自动生成简洁的提交信息和生成多个项目的周报。它可以帮助开发人员更高效地生成 Git 提交信息，并定期生成团队周报，方便团队协作和项目管理。
 
