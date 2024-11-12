@@ -9,6 +9,43 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+// 获取最近一周的时间范围
+function getLastWeekRange() {
+  const now = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(now.getDate() - 7);
+
+  const formatDate = (date) => date.toISOString().split('T')[0]; // 格式化为 YYYY-MM-DD
+  return {
+    since: formatDate(oneWeekAgo),
+    until: formatDate(now),
+  };
+}
+
+
+
+// 询问时间范围或默认最近一周
+async function askTimeRangeOrDefault() {
+  return new Promise((resolve) => {
+    rl.question(
+      chalk.magenta('是否使用默认时间范围（最近一周）？(y/n): '),
+      (answer) => {
+        if (answer.toLowerCase() === 'y') {
+          const { since, until } = getLastWeekRange();
+          console.log(chalk.green(`使用最近一周的时间范围：${since} 到 ${until}`));
+          resolve({ since, until });
+        } else {
+          rl.question(chalk.magenta('请输入开始日期 (YYYY-MM-DD)：'), (since) => {
+            rl.question(chalk.magenta('请输入结束日期 (YYYY-MM-DD)：'), (until) => {
+              resolve({ since, until });
+            });
+          });
+        }
+      }
+    );
+  });
+}
+
 
 // 获取时间范围内的 git log
 async function getGitLogs(since, until) {
@@ -49,7 +86,7 @@ async function generateReport(commitLogs) {
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
     const result = await model.generateContent(prompt);
     return result.response.text();
   } catch (error) {
@@ -73,8 +110,8 @@ async function askTimeRange() {
 async function main() {
   console.log(chalk.blue.bold('--- 周报生成器 ---'));
 
-  // 询问时间范围
-  const { since, until } = await askTimeRange();
+  // 获取时间范围
+  const { since, until } = await askTimeRangeOrDefault();
 
   // 获取提交记录
   const commitLogs = await getGitLogs(since, until);
