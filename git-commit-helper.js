@@ -72,7 +72,7 @@ async function main() {
   if (diffContent) {
     console.log(chalk.yellow('Git diff 内容：\n'), chalk.white(diffContent));
 
-    console.log(chalk.green('\n正在使用 OpenAI 生成提交信息...\n'));
+    console.log(chalk.green('\n正在使用 AI 生成提交信息...\n'));
     const commitMessage = await generateCommitMessage(diffContent);
     if (commitMessage) {
       console.log(chalk.cyan.bold('生成的提交信息：\n'), chalk.green(commitMessage));
