@@ -13,20 +13,32 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
+
+
+// 执行 git add .
+async function stageChanges() {
+  try {
+    console.log(chalk.blue('正在将所有更改添加到暂存区 (git add .)...'));
+    await git.add('.');
+    console.log(chalk.green('所有更改已成功添加到暂存区。'));
+  } catch (error) {
+    console.error(chalk.red('添加更改到暂存区时出错：'), error);
+    process.exit(1);
+  }
+}
+
+
+
+
+
 async function generateCommitMessage(diffContent) {
   const apiKey = process.env.API_KEY;
   const prompt = `根据以下 git diff 内容生成一条简洁的只有中文的 commit 信息：\n\n${diffContent}\n\n`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
-
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-
-
-
     const result = await model.generateContent(prompt);
-
     return result.response.text()
   } catch (error) {
     console.error('Error generating commit message:', error);
@@ -49,6 +61,9 @@ async function getGitDiff() {
 // 主程序
 async function main() {
   console.log(chalk.blue.bold('--- Git Commit Helper ---'));
+  // 自动执行 git add .
+  await stageChanges();
+
   console.log(chalk.green('正在获取暂存区的修改内容...\n'));
 
   const diffContent = await getGitDiff();
