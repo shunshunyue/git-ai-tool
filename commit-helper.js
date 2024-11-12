@@ -39,6 +39,7 @@ async function getGitDiff() {
 // 主程序
 async function main() {
   const diffContent = await getGitDiff();
+
   console.log(diffContent, "diffContentdiffContent")
   if (diffContent) {
     console.log('Git diff 内容：\n', diffContent);
