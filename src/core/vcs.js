@@ -15,4 +15,8 @@ export default class VCS {
   async getUserName() {
     throw new Error('Method getUserName must be implemented');
   }
+  // 获取提交记录
+  async getLogs(since, until) {
+    throw new Error('Method getLogs must be implemented');
+  }
 }

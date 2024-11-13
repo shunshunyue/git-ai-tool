@@ -10,6 +10,7 @@
   "bin": {
     "git-commit": "./git-commit-helper.js",
     "acmt": "./src/commitHelper.js",
+    "awr": "./src/weeklyReport.js",
     "git-report": "./git-weekly-report.js"
   },
   "keywords": [],

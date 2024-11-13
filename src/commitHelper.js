@@ -34,7 +34,7 @@ async function generateCommitMessage(diffContent) {
        scope:可选。变更范围(细粒度要合适，并在一个项目中保持一致):比如页面名、模块名、或组件名
        subject:此次变更的简短描述，必须采用现在时态，如果是英语则首字母不能大写，句尾不加句号`;
 
-  const prompt = `根据以下版本控制差异内容生成一条符合此规则的 commit 信息：${commitRule} \n\n${diffContent}\n\n`;
+  const prompt = `根据以下版本控制差异内容生成一条符合此规则${commitRule}只有中文的简洁的 commit 信息,\n\n${diffContent}\n\n`;
 
   try {
     const genAI = new GoogleGenerativeAI(apiKey);
@@ -75,7 +75,6 @@ async function main() {
   // 获取差异内容
   console.log(chalk.green('正在获取修改内容...\n'));
   const diffContent = await vcs.getDiff();
-
   if (diffContent) {
     console.log(chalk.green('\n正在使用 AI 生成提交信息...\n'));
     const commitMessage = await generateCommitMessage(diffContent);
