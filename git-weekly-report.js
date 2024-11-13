@@ -152,7 +152,7 @@ async function main() {
       rl.question(chalk.magenta('是否将周报保存为文件？(y/n): '), async (answer) => {
         if (answer.toLowerCase() === 'y') {
           const fs = await import('fs');
-          fs.writeFileSync(`multi-project-report-${since}-to-${until}.txt`, report, 'utf8');
+          fs.writeFileSync(`multi-project-report-${since}-to-${until}.md`, report, 'utf8');
           console.log(chalk.green.bold('\n周报已保存为文件！🎉'));
         } else {
           console.log(chalk.red('\n周报未保存。'));
